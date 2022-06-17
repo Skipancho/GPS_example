@@ -14,13 +14,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.jjsh.gpsexample.R
+import com.jjsh.gpsexample.utils.GPSTracker
 
 class MainActivity : AppCompatActivity() {
-    // 체크할 퍼미션
-    private val requiredPermission = arrayOf(
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION
-    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,5 +114,9 @@ class MainActivity : AppCompatActivity() {
     companion object{
         const val GPS_ENABLE_REQUEST_CODE = 2001
         const val PERMISSIONS_REQUEST_CODE = 100
+        val requiredPermission = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
     }
 }
