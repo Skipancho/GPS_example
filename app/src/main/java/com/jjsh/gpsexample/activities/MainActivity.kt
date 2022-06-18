@@ -13,10 +13,27 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.jjsh.gpsexample.R
+import com.jjsh.gpsexample.databinding.ActivityMainBinding
 import com.jjsh.gpsexample.utils.GPSTracker
+import com.jjsh.gpsexample.viewmodels.MainViewModel
 
 class MainActivity : AppCompatActivity() {
+
+    private val binding by lazy {
+        DataBindingUtil.setContentView<ActivityMainBinding>(
+            this,
+            R.layout.activity_main
+        )
+    }
+
+    private val viewModel by lazy {
+        ViewModelProvider(this)[MainViewModel::class.java].apply {
+            this.context = this@MainActivity
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +43,9 @@ class MainActivity : AppCompatActivity() {
             showDialogForLocationServiceSetting()
         else
             checkRunTimePermission()
+
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
     }
 
     /**

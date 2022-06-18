@@ -4,6 +4,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -11,6 +12,7 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.jjsh.gpsexample.activities.MainActivity
+import splitties.toast.toast
 
 class GPSTracker(
     private val context: Context
@@ -63,10 +65,9 @@ class GPSTracker(
     }
 
     override fun onLocationChanged(p0: Location) {
-        TODO("Not yet implemented")
+
     }
     override fun onBind(p0: Intent?): IBinder? {
-        TODO("Not yet implemented")
         return null
     }
 
