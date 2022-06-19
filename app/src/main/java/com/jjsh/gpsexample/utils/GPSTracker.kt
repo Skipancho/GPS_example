@@ -27,7 +27,7 @@ class GPSTracker(
         getLocation()
     }
 
-    fun getLocation() : Location?{
+    private fun getLocation() : Location?{
         try {
             locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
             val isGPSEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)

@@ -1,5 +1,6 @@
 package com.jjsh.gpsexample.viewmodels
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.location.Address
@@ -11,6 +12,7 @@ import com.jjsh.gpsexample.utils.GPSTracker
 import kotlinx.coroutines.launch
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
+    @SuppressLint("StaticFieldLeak")
     var context : Context? = null
 
     val locationText = MutableLiveData("")
