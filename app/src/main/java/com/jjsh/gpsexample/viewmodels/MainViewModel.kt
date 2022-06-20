@@ -23,7 +23,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             val gpsTracker = GPSTracker(con)
             var result = ""
             result += "${gpsTracker.latitude}\n"
-            result += "${gpsTracker.longitude}\n"
+            result += "${gpsTracker.longitude}\n\n"
             result += getAddress(gpsTracker.latitude,gpsTracker.longitude)
             locationText.postValue(result)
         }
@@ -31,7 +31,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     private fun getAddress(latitude: Double, longitude: Double): String {
         val geocoder = Geocoder(context)
-        var addressList = mutableListOf<Address>()
+        val addressList : MutableList<Address>
         try {
             addressList = geocoder.getFromLocation(
                 latitude,
@@ -45,6 +45,12 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         if (addressList.isNullOrEmpty()) {
             return "주소 미발견"
         }
-        return addressList[0].getAddressLine(0)
+        var result  = ""
+        addressList.forEach { address ->
+            for (i in 0 .. address.maxAddressLineIndex){
+                result += "${address.getAddressLine(i)}\n"
+            }
+        }
+        return result
     }
 }

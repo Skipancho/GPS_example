@@ -20,8 +20,20 @@ class GPSTracker(
 
     private var location : Location? = null
     private lateinit var locationManager : LocationManager
-    var latitude = 0.0
+    var latitude : Double = 0.0
+        get() {
+            if (location == null){
+                getLocation()
+            }
+            return field
+        }
     var longitude = 0.0
+        get() {
+            if (location == null){
+                getLocation()
+            }
+            return field
+        }
 
     init {
         getLocation()

@@ -10,10 +10,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="sdfsdfs"/>
-    <Button
-        android:id="@+id/widget_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="위치 구하기"/>
+        android:text="no data"/>
+
 </LinearLayout>

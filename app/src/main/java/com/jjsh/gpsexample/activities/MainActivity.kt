@@ -64,11 +64,11 @@ class MainActivity : AppCompatActivity() {
         builder.setTitle("GPS 비활성화")
             .setMessage("앱 사용을 위해 GPS가 필요합니다.\n GPS를 활성화 하시겠습니까?")
             .setCancelable(true)
-            .setPositiveButton("확인") { dialogInterface, i ->
+            .setPositiveButton("확인") { _, _ ->
                 val callGPSSettingIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 startActivityForResult(callGPSSettingIntent, GPS_ENABLE_REQUEST_CODE)
             }
-            .setNegativeButton("취소"){d,i ->
+            .setNegativeButton("취소"){ d, _ ->
                 d.cancel()
             }
             .create().show()
@@ -96,7 +96,6 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
         when(requestCode){
             GPS_ENABLE_REQUEST_CODE -> {
                 if (checkLocationServicesStatus()){
