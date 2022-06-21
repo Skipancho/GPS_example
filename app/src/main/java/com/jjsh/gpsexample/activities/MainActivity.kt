@@ -1,7 +1,6 @@
 package com.jjsh.gpsexample.activities
 
 import android.Manifest
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
@@ -17,8 +16,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.jjsh.gpsexample.R
 import com.jjsh.gpsexample.databinding.ActivityMainBinding
-import com.jjsh.gpsexample.utils.GPSTracker
 import com.jjsh.gpsexample.viewmodels.MainViewModel
+import com.opencsv.CSVReader
+import kotlinx.coroutines.coroutineScope
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,8 +44,29 @@ class MainActivity : AppCompatActivity() {
         else
             checkRunTimePermission()
 
+
+
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+
+        initTestData()
+    }
+
+    private fun initTestData(){
+        val assetManager = resources.assets
+        val inputStream = assetManager.open(FILE_NAME)
+        val dataList : List<Array<String>> = inputStream.bufferedReader().use { br ->
+            CSVReader(br).use {
+                it.readAll()
+            }
+        }
+        dataList.forEach { arr ->
+            arr.forEach {
+                print(" $it")
+            }
+            println()
+        }
     }
 
     /**
@@ -96,6 +117,7 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         when(requestCode){
             GPS_ENABLE_REQUEST_CODE -> {
                 if (checkLocationServicesStatus()){
@@ -133,6 +155,7 @@ class MainActivity : AppCompatActivity() {
     companion object{
         const val GPS_ENABLE_REQUEST_CODE = 2001
         const val PERMISSIONS_REQUEST_CODE = 100
+        const val FILE_NAME = "subway_daegu.csv"
         val requiredPermission = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
