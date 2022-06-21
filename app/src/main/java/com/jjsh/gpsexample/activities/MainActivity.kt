@@ -3,22 +3,30 @@ package com.jjsh.gpsexample.activities
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.jjsh.gpsexample.App
 import com.jjsh.gpsexample.R
 import com.jjsh.gpsexample.databinding.ActivityMainBinding
+import com.jjsh.gpsexample.datas.SubwayStation
 import com.jjsh.gpsexample.viewmodels.MainViewModel
 import com.opencsv.CSVReader
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,16 +52,25 @@ class MainActivity : AppCompatActivity() {
         else
             checkRunTimePermission()
 
-
-
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.resultTv2.movementMethod = ScrollingMovementMethod()
 
+        App.progressOn.observe(this){
+            if (it) {
+                binding.progressBar.visibility = View.VISIBLE
+                binding.resultBtn.visibility = View.GONE
+            }else {
+                binding.progressBar.visibility = View.GONE
+                binding.resultBtn.visibility = View.VISIBLE
+            }
+        }
 
         initTestData()
     }
 
-    private fun initTestData(){
+    private fun initTestData() = GlobalScope.launch{
+        App.progressOn.postValue(true)
         val assetManager = resources.assets
         val inputStream = assetManager.open(FILE_NAME)
         val dataList : List<Array<String>> = inputStream.bufferedReader().use { br ->
@@ -61,12 +78,17 @@ class MainActivity : AppCompatActivity() {
                 it.readAll()
             }
         }
-        dataList.forEach { arr ->
-            arr.forEach {
-                print(" $it")
+        val geocoder = Geocoder(this@MainActivity)
+        dataList.forEach { it ->
+            val name = it[2]
+            val line = it[1]
+            val address = it[3]
+            geocoder.getFromLocationName(address,5)[0].let { adrs ->
+                App.stationData.add(SubwayStation(name,line,address,adrs.latitude,adrs.longitude))
             }
-            println()
+            //App.stationData.add(SubwayStation(name, line, address))
         }
+        App.progressOn.postValue(false)
     }
 
     /**
