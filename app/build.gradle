@@ -35,6 +35,9 @@ android {
     dataBinding{
         enabled = true
     }
+    aaptOptions {
+        noCompress "csv"
+    }
 }
 
 dependencies {
@@ -52,7 +55,4 @@ dependencies {
 
     implementation "com.louiscad.splitties:splitties-activities:3.0.0"
     implementation "com.louiscad.splitties:splitties-toast:3.0.0"
-
-    //open csv
-    implementation 'com.opencsv:opencsv:4.4'
 }

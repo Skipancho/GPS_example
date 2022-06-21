@@ -22,11 +22,7 @@ import com.jjsh.gpsexample.R
 import com.jjsh.gpsexample.databinding.ActivityMainBinding
 import com.jjsh.gpsexample.datas.SubwayStation
 import com.jjsh.gpsexample.viewmodels.MainViewModel
-import com.opencsv.CSVReader
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -69,14 +65,13 @@ class MainActivity : AppCompatActivity() {
         initTestData()
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun initTestData() = GlobalScope.launch{
         App.progressOn.postValue(true)
         val assetManager = resources.assets
         val inputStream = assetManager.open(FILE_NAME)
-        val dataList : List<Array<String>> = inputStream.bufferedReader().use { br ->
-            CSVReader(br).use {
-                it.readAll()
-            }
+        val dataList : List<List<String>> = inputStream.bufferedReader().use { br ->
+            br.readLines().map { it.split(",") }.toList()
         }
         val geocoder = Geocoder(this@MainActivity)
         dataList.forEach { it ->
