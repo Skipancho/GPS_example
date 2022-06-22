@@ -8,6 +8,5 @@ class App : Application() {
     companion object{
         val stationData = mutableListOf<SubwayStation>()
         val progressOn = MutableLiveData(false)
-        var clickable = true
     }
 }

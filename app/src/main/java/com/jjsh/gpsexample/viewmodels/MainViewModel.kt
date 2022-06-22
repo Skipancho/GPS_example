@@ -21,7 +21,6 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     val subwayText = MutableLiveData("")
 
     fun testOnClick(){
-        if (!App.clickable) return
         val con = context ?: return
         viewModelScope.launch {
             App.progressOn.postValue(true)
@@ -79,7 +78,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         return "위도 : $latitude\n경도 : $longitude"
     }
 
-    fun getData(){
+    private fun getData(){
         val result = StringBuilder()
         App.stationData.forEach {
             result.append("${it.name} : ${it.line} : ${it.address}\n ${it.latitude} \n ${it.longitude}\n")
