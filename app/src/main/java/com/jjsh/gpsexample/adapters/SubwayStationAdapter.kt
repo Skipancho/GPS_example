@@ -8,9 +8,9 @@ import com.jjsh.gpsexample.R
 import com.jjsh.gpsexample.databinding.StationItemBinding
 import com.jjsh.gpsexample.datas.SubwayStation
 
-class SubwayStationAdapter(
-    private val list : List<SubwayStation>
-) : RecyclerView.Adapter<SubwayStationAdapter.SubwayStationDataViewHolder>(){
+class SubwayStationAdapter: RecyclerView.Adapter<SubwayStationAdapter.SubwayStationDataViewHolder>(){
+
+    private val list  = mutableListOf<SubwayStation>()
 
     class SubwayStationDataViewHolder(
         private val binding : StationItemBinding
@@ -20,6 +20,13 @@ class SubwayStationAdapter(
             binding.nameTv.text = "${item.name} ${item.line}"
             binding.distTv.text = "${item.distance}m"
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateList(items : List<SubwayStation>){
+        list.clear()
+        list.addAll(items)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubwayStationDataViewHolder {

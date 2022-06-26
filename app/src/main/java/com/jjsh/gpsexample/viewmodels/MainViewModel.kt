@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.jjsh.gpsexample.App
+import com.jjsh.gpsexample.utils.DistanceCalculator
 import com.jjsh.gpsexample.utils.GPSTracker
 import kotlinx.coroutines.launch
 import java.lang.StringBuilder
@@ -31,7 +32,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             result += getAddress(gpsTracker.latitude,gpsTracker.longitude)
             locationText.postValue(result)
 
-            getData()
+            getData(gpsTracker.latitude,gpsTracker.longitude)
 
             App.progressOn.postValue(false)
         }
@@ -53,36 +54,37 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         if (addressList.isNullOrEmpty()) {
             return "주소 미발견"
         }
-        var result  = ""
+        /*var result  = ""
         addressList.forEach { address ->
             for (i in 0 .. address.maxAddressLineIndex){
                 result += "${address.getAddressLine(i)}\n"
             }
         }
-        return result
+        return result*/
+        return addressList[0].getAddressLine(0)
     }
 
-    private fun getLocation(address : String) : String{
+    private fun getLocation(address : String) : DoubleArray{
         val geocoder = Geocoder(context)
         var latitude  = 0.0
         var longitude = 0.0
         try {
             val list = geocoder.getFromLocationName(address,5)
-            val location = list[0].let{
+            list[0].let{
                 latitude = it.latitude
                 longitude = it.longitude
             }
         }catch (e : Exception){
-
+            e.printStackTrace()
         }
-        return "위도 : $latitude\n경도 : $longitude"
+        return doubleArrayOf(latitude,longitude)
     }
 
-    private fun getData(){
-        val result = StringBuilder()
-        App.stationData.forEach {
-            result.append("${it.name} : ${it.line} : ${it.address}\n ${it.latitude} \n ${it.longitude}\n")
+    private fun getData(latitude: Double, longitude: Double){
+        val datas = App.stationData
+        for (i in datas.indices){
+            App.stationData[i].distance = DistanceCalculator.distance(datas[i].latitude,datas[i].longitude, latitude,longitude)
         }
-        subwayText.postValue(result.toString())
+        App.stationData.sortBy { it.distance }
     }
 }

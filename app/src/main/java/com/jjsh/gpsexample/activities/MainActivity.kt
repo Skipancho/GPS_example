@@ -1,6 +1,7 @@
 package com.jjsh.gpsexample.activities
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
@@ -17,8 +18,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.jjsh.gpsexample.App
 import com.jjsh.gpsexample.R
+import com.jjsh.gpsexample.adapters.SubwayStationAdapter
 import com.jjsh.gpsexample.databinding.ActivityMainBinding
 import com.jjsh.gpsexample.datas.SubwayStation
 import com.jjsh.gpsexample.viewmodels.MainViewModel
@@ -39,6 +43,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private val subwayStationAdapter = SubwayStationAdapter()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -50,7 +56,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.resultTv2.movementMethod = ScrollingMovementMethod()
 
         App.progressOn.observe(this){
             if (it) {
@@ -63,6 +68,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         initTestData()
+        initView()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun initView(){
+        subwayStationAdapter.updateList(App.stationData)
+        binding.stationRecyclerview.adapter = subwayStationAdapter
+        binding.stationRecyclerview.layoutManager = LinearLayoutManager(this)
+        binding.resultBtn.setOnClickListener {
+            viewModel.testOnClick()
+            subwayStationAdapter.updateList(App.stationData)
+        }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
