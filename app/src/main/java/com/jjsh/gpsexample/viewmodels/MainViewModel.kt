@@ -82,8 +82,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     private fun getData(latitude: Double, longitude: Double){
         val datas = App.stationData
+        println("${longitude}, $latitude")
         for (i in datas.indices){
-            App.stationData[i].distance = DistanceCalculator.distance(datas[i].latitude,datas[i].longitude, latitude,longitude)
+            println("${datas[i].longitude}, ${datas[i].latitude}")
+            App.stationData[i].distance = DistanceCalculator.distance2(datas[i].latitude,datas[i].longitude, latitude,longitude)
         }
         App.stationData.sortBy { it.distance }
     }

@@ -18,7 +18,13 @@ class SubwayStationAdapter: RecyclerView.Adapter<SubwayStationAdapter.SubwayStat
         @SuppressLint("SetTextI18n")
         fun bind(item : SubwayStation){
             binding.nameTv.text = "${item.name} ${item.line}"
-            binding.distTv.text = "${item.distance}m"
+            binding.distTv.text = if (item.distance > 1000.0){
+                val dist = (item.distance/100).toInt() / 10.0
+                "${dist}km"
+            }else{
+                "${(item.distance*100).toInt()/100.0}m"
+            }
+
         }
     }
 
