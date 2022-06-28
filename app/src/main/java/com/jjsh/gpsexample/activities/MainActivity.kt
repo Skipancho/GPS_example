@@ -24,9 +24,13 @@ import com.jjsh.gpsexample.App
 import com.jjsh.gpsexample.R
 import com.jjsh.gpsexample.adapters.SubwayStationAdapter
 import com.jjsh.gpsexample.databinding.ActivityMainBinding
+import com.jjsh.gpsexample.datas.GeoData
 import com.jjsh.gpsexample.datas.SubwayStation
+import com.jjsh.gpsexample.utils.Prefs
 import com.jjsh.gpsexample.viewmodels.MainViewModel
 import kotlinx.coroutines.*
+import org.json.JSONArray
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
@@ -87,7 +91,7 @@ class MainActivity : AppCompatActivity() {
         App.progressOn.postValue(true)
         val assetManager = resources.assets
         val inputStream = assetManager.open(FILE_NAME)
-        val dataList : List<List<String>> = inputStream.bufferedReader().use { br ->
+        /*val dataList : List<List<String>> = inputStream.bufferedReader().use { br ->
             br.readLines().map { it.split(",") }.toList()
         }
         val geocoder = Geocoder(this@MainActivity)
@@ -99,7 +103,27 @@ class MainActivity : AppCompatActivity() {
                 App.stationData.add(SubwayStation(name,line,address,adrs.latitude,adrs.longitude))
             }
             //App.stationData.add(SubwayStation(name, line, address))
+        }*/
+        val jsonArray = JSONArray(inputStream.reader().readText())
+        val size = jsonArray.length()
+        val geoMap = Prefs.geoMap
+        val geocoder = Geocoder(this@MainActivity)
+        for( i in 0 until size){
+            val obj : JSONObject = jsonArray.getJSONObject(i)
+            val (name, line, address) = arrayOf(
+                obj.getString("name"),obj.getString("line"),obj.getString("address")
+            )
+            if (geoMap.containsKey(address)){
+                val geo = geoMap[address]!!
+                App.stationData.add(SubwayStation(name,line,address,geo.latitude,geo.longitude))
+            }else{
+                geocoder.getFromLocationName(address,5)[0].let { adrs ->
+                    geoMap[address] = GeoData(address,adrs.latitude,adrs.longitude)
+                    App.stationData.add(SubwayStation(name,line,address,adrs.latitude,adrs.longitude))
+                }
+            }
         }
+        Prefs.geoMap = geoMap
         App.progressOn.postValue(false)
     }
 
@@ -189,7 +213,8 @@ class MainActivity : AppCompatActivity() {
     companion object{
         const val GPS_ENABLE_REQUEST_CODE = 2001
         const val PERMISSIONS_REQUEST_CODE = 100
-        const val FILE_NAME = "subway_daegu.csv"
+        const val FILE_NAME = "data.json"
+        //const val FILE_NAME = "subway_daegu.csv"
         val requiredPermission = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION

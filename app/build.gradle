@@ -55,4 +55,8 @@ dependencies {
 
     implementation "com.louiscad.splitties:splitties-activities:3.0.0"
     implementation "com.louiscad.splitties:splitties-toast:3.0.0"
+
+    implementation 'androidx.preference:preference-ktx:1.2.0'
+
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 }
