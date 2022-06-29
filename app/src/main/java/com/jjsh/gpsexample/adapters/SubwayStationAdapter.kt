@@ -11,8 +11,9 @@ import com.jjsh.gpsexample.datas.SubwayStation
 class SubwayStationAdapter: RecyclerView.Adapter<SubwayStationAdapter.SubwayStationDataViewHolder>(){
 
     private val list  = mutableListOf<SubwayStation>()
+    var onClick : () -> Unit = {}
 
-    class SubwayStationDataViewHolder(
+    inner class SubwayStationDataViewHolder(
         private val binding : StationItemBinding
     ) : RecyclerView.ViewHolder(binding.root){
         @SuppressLint("SetTextI18n")
@@ -24,7 +25,9 @@ class SubwayStationAdapter: RecyclerView.Adapter<SubwayStationAdapter.SubwayStat
             }else{
                 "${(item.distance*100).toInt()/100.0}m"
             }
-
+            binding.root.setOnClickListener {
+                onClick()
+            }
         }
     }
 

@@ -31,6 +31,7 @@ import com.jjsh.gpsexample.viewmodels.MainViewModel
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
+import splitties.activities.start
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,7 +48,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private val subwayStationAdapter = SubwayStationAdapter()
+    private val subwayStationAdapter = SubwayStationAdapter().apply {
+        onClick = {
+            start<MapActivity>()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

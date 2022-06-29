@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">GpsExample</string>
+    <string name="naver_map_client_id">fdz6eszmkw</string>
 </resources>
