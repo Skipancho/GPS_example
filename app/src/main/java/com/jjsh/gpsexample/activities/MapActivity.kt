@@ -3,9 +3,14 @@ package com.jjsh.gpsexample.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
+import com.jjsh.gpsexample.App
 import com.jjsh.gpsexample.R
 import com.jjsh.gpsexample.databinding.ActivityMapBinding
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.Marker
 
 class MapActivity : AppCompatActivity() {
 
@@ -21,7 +26,15 @@ class MapActivity : AppCompatActivity() {
         setContentView(R.layout.activity_map)
 
         binding.mapView.onCreate(savedInstanceState)
-        binding.mapView.getMapAsync(OnMapReadyCallback {})
+        binding.mapView.getMapAsync(OnMapReadyCallback { map ->
+            val pos = LatLng(App.selectedPosition[0],App.selectedPosition[1])
+            val marker = Marker()
+            marker.position = pos
+            marker.map = map
+
+            val cameraUpdate = CameraUpdate.scrollTo(pos)
+            map.moveCamera(cameraUpdate)
+        })
     }
 
 

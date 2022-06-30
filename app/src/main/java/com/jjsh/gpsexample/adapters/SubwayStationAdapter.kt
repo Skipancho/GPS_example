@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.jjsh.gpsexample.App
 import com.jjsh.gpsexample.R
 import com.jjsh.gpsexample.databinding.StationItemBinding
 import com.jjsh.gpsexample.datas.SubwayStation
@@ -26,6 +27,7 @@ class SubwayStationAdapter: RecyclerView.Adapter<SubwayStationAdapter.SubwayStat
                 "${(item.distance*100).toInt()/100.0}m"
             }
             binding.root.setOnClickListener {
+                App.selectedPosition = doubleArrayOf(item.latitude,item.longitude)
                 onClick()
             }
         }
